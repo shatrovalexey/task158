@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\filters\AccessControl;
 
 /**
  * User model
@@ -28,7 +29,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
+	const ROLE_USER = 10;
+	const ROLE_ADMIN = 20;
 
     /**
      * {@inheritdoc}
@@ -45,7 +47,36 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             TimestampBehavior::class,
+		   'access' => [
+			   'class' => AccessControl::class,
+			   'only' => ['logout', 'signup', 'about'],
+			   'rules' => [
+				   [
+					   'actions' => ['signup'],
+					   'allow' => true,
+					   'roles' => ['?'],
+				   ],
+				   [
+					   'actions' => ['logout'],
+					   'allow' => true,
+					   'roles' => ['@'],
+				   ],
+				   [
+					   'actions' => ['about'],
+					   'allow' => true,
+					   'roles' => ['@'],
+					   'matchCallback' => function ($rule, $action) {
+						   return User::isUserAdmin(Yii::$app->user->identity->username);
+					   }
+				   ],
+			   ],
+		   ],
         ];
+    }
+
+    public function fields()
+    {
+		return ['role', 'status', 'email', 'username', 'created_at', 'updated_at',];
     }
 
     /**
@@ -56,6 +87,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+			['role', 'default', 'value' => 10],
+			['role', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
         ];
     }
 
@@ -133,6 +166,11 @@ class User extends ActiveRecord implements IdentityInterface
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
+
+	public static function isUserAdmin($username)
+	{
+		return !! static::findOne(['username' => $username, 'role' => self::ROLE_ADMIN]);
+	}
 
     /**
      * {@inheritdoc}

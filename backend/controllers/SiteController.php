@@ -4,10 +4,10 @@ namespace backend\controllers;
 
 use common\models\LoginForm;
 use Yii;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
+use yii\filters\{VerbFilter, AccessControl};
+use yii\web\{Controller, Response};
+use common\models\{User, Url, LogModel};
+use yii\data\ActiveDataProvider;
 
 /**
  * Site controller
@@ -24,7 +24,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error', 'report',],
                         'allow' => true,
                     ],
                     [
@@ -55,6 +55,16 @@ class SiteController extends Controller
         ];
     }
 
+	public function actionReport()
+	{
+		$adp = new ActiveDataProvider([
+			'query' => LogModel::getReport()
+			, 'pagination' => ['pageSize' => 20,],
+		]);
+
+        return $this->render('report', ['adp' => $adp,]);
+	}
+
     /**
      * Displays homepage.
      *
@@ -62,7 +72,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+		return Yii::$app->user->isGuest ? $this->render('index') : $this->redirect(['report',]);
     }
 
     /**

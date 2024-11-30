@@ -7,14 +7,15 @@ use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+use yii\web\{Controller, Response};
+use yii\filters\{VerbFilter, AccessControl};
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\{User, Url, LogModel};
+use yii\data\ActiveDataProvider;
 
 /**
  * Site controller
@@ -29,12 +30,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup', 'logout', 'create', 'update', 'delete', 'list',],
                         'allow' => true,
-                        'roles' => ['?'],
                     ],
                     [
                         'actions' => ['logout'],
@@ -68,6 +67,49 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionCreate()
+    {
+        $model = new Url();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			$model->save();
+
+			return $this->redirect(['list',]);
+        }
+
+        return $this->render('create', ['model' => $model,]);
+    }
+
+    public function actionUpdate(int $id)
+    {
+        $model = Url::findOne($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			$model->update();
+
+			return $this->redirect(['update', 'id' => $id,]);
+        }
+
+        return $this->render('create', ['model' => $model,]);
+    }
+
+    public function actionDelete(int $id)
+    {
+        Url::findOne($id)->delete();
+
+		return $this->redirect(['list',]);
+    }
+
+	public function actionList()
+	{
+		$adp = new ActiveDataProvider([
+			'query' => Url::find()->orderBy('href')
+			, 'pagination' => ['pageSize' => 20,],
+		]);
+
+        return $this->render('list', ['adp' => $adp,]);
+	}
+
     /**
      * Displays homepage.
      *
@@ -75,7 +117,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return Yii::$app->user->isGuest ? $this->render('index') : $this->redirect(['list',]);
     }
 
     /**
