@@ -11,7 +11,7 @@ use common\models\LogModel;
 */
 class Url extends ActiveRecord
 {
-	public $primaryKey = 'id';
+    public $primaryKey = 'id';
 
     /**
      * {@inheritdoc}
@@ -27,7 +27,7 @@ class Url extends ActiveRecord
     public function rules()
     {
         return [
-			[['id',], 'integer',],
+            [['id',], 'integer',],
             [['href',], 'url', 'defaultScheme' => 'https',],
             [['href', 'frequency', 'repetitions', 'delay',], 'required',],
             [['delay',], 'integer', 'min' => 1,],
@@ -39,22 +39,22 @@ class Url extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-	public function attributeLabels()
-	{
-		return [
-			'id' => 'ID'
-			, 'href' => 'URL'
-			, 'frequency' => 'частота проверки, минуты'
-			, 'repetitions' => 'количество повторов, -1=бесконечность'
-			, 'delay' => 'задержка в минутах между повторами',
-		];
-	}
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID'
+            , 'href' => 'URL'
+            , 'frequency' => 'частота проверки, минуты'
+            , 'repetitions' => 'количество повторов, -1=бесконечность'
+            , 'delay' => 'задержка в минутах между повторами',
+        ];
+    }
 
     /**
      * {@inheritdoc}
      */
-	public function getLogs()
-	{
-		return $this->hasMany(LogModel::class, ['id' => 'url_id',]);
-	}
+    public function getLogs()
+    {
+        return $this->hasMany(LogModel::class, ['id' => 'url_id',]);
+    }
 }

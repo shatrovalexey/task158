@@ -66,65 +66,65 @@ class SiteController extends Controller
             ],
         ];
     }
-
-	/**
-	* Создать настройки для URL
-	*/
+    
+    /**
+    * Создать настройки для URL
+    */
     public function actionCreate()
     {
         $model = new Url();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			$model->save();
+            $model->save();
 
-			return $this->redirect(['list',]);
+            return $this->redirect(['list',]);
         }
 
         return $this->render('create', ['model' => $model,]);
     }
 
-	/**
-	* Изменить настройки для URL
-	*
-	* @param int $id - ID настроек
-	*/
+    /**
+    * Изменить настройки для URL
+    *
+    * @param int $id - ID настроек
+    */
     public function actionUpdate(int $id)
     {
         $model = Url::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			$model->update();
+            $model->update();
 
-			return $this->redirect(['update', 'id' => $id,]);
+            return $this->redirect(['update', 'id' => $id,]);
         }
 
         return $this->render('create', ['model' => $model,]);
     }
 
-	/**
-	* Удалить настройки для URL
-	*
-	* @param int $id - ID настроек
-	*/
+    /**
+    * Удалить настройки для URL
+    *
+    * @param int $id - ID настроек
+    */
     public function actionDelete(int $id)
     {
         Url::findOne($id)->delete();
 
-		return $this->redirect(['list',]);
+        return $this->redirect(['list',]);
     }
 
-	/**
-	* Список настроек для URL
-	*/
-	public function actionList()
-	{
-		$adp = new ActiveDataProvider([
-			'query' => Url::find()->orderBy('href')
-			, 'pagination' => ['pageSize' => 20,],
-		]);
+    /**
+    * Список настроек для URL
+    */
+    public function actionList()
+    {
+        $adp = new ActiveDataProvider([
+            'query' => Url::find()->orderBy('href')
+            , 'pagination' => ['pageSize' => 20,],
+        ]);
 
         return $this->render('list', ['adp' => $adp,]);
-	}
+    }
 
     /**
      * Displays homepage.

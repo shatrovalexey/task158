@@ -6,16 +6,16 @@ use yii\widgets\ActiveForm;
 ?>
 <?php $form = ActiveForm::begin(); ?>
 <?= GridView::widget([
-	'dataProvider' => $adp,
-	'columns' => [
-		'created_at'
-		, 'href'
-		, 'code'
-		, 'body'
-		, 'repeated'
-		, 'repetitions'
-		, 'expired'
-		, 'success',
-	],
+    'dataProvider' => $adp,
+    'columns' => [
+        'created_at'
+        , 'href'
+        , 'code'
+        , 'body'
+        , 'repeated'
+        , 'repetitions'
+        , 'expired'
+        , 'success',
+    ],
 ]) ?>
 <?php ActiveForm::end(); ?>

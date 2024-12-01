@@ -55,18 +55,18 @@ class SiteController extends Controller
         ];
     }
 
-	/**
-	* Вывести отчёт о выполнении задач
-	*/
-	public function actionReport()
-	{
-		$adp = new ActiveDataProvider([
-			'query' => LogModel::getReport()
-			, 'pagination' => ['pageSize' => 20,],
-		]);
+    /**
+    * Вывести отчёт о выполнении задач
+    */
+    public function actionReport()
+    {
+        $adp = new ActiveDataProvider([
+            'query' => LogModel::getReport()
+            , 'pagination' => ['pageSize' => 20,],
+        ]);
 
         return $this->render('report', ['adp' => $adp,]);
-	}
+    }
 
     /**
      * Displays homepage.
@@ -75,7 +75,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-		return Yii::$app->user->isGuest ? $this->render('index') : $this->redirect(['report',]);
+        return Yii::$app->user->isGuest ? $this->render('index') : $this->redirect(['report',]);
     }
 
     /**
