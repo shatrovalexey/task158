@@ -67,6 +67,9 @@ class SiteController extends Controller
         ];
     }
 
+	/**
+	* Создать настройки для URL
+	*/
     public function actionCreate()
     {
         $model = new Url();
@@ -80,6 +83,11 @@ class SiteController extends Controller
         return $this->render('create', ['model' => $model,]);
     }
 
+	/**
+	* Изменить настройки для URL
+	*
+	* @param int $id - ID настроек
+	*/
     public function actionUpdate(int $id)
     {
         $model = Url::findOne($id);
@@ -93,6 +101,11 @@ class SiteController extends Controller
         return $this->render('create', ['model' => $model,]);
     }
 
+	/**
+	* Удалить настройки для URL
+	*
+	* @param int $id - ID настроек
+	*/
     public function actionDelete(int $id)
     {
         Url::findOne($id)->delete();
@@ -100,6 +113,9 @@ class SiteController extends Controller
 		return $this->redirect(['list',]);
     }
 
+	/**
+	* Список настроек для URL
+	*/
 	public function actionList()
 	{
 		$adp = new ActiveDataProvider([

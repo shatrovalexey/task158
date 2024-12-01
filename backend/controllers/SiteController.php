@@ -55,6 +55,9 @@ class SiteController extends Controller
         ];
     }
 
+	/**
+	* Вывести отчёт о выполнении задач
+	*/
 	public function actionReport()
 	{
 		$adp = new ActiveDataProvider([

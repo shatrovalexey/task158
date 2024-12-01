@@ -6,6 +6,9 @@ use yii\base\Model;
 use yii\db\ActiveRecord;
 use common\models\LogModel;
 
+/**
+* Настройки для обработки URL
+*/
 class Url extends ActiveRecord
 {
 	public $primaryKey = 'id';
@@ -18,6 +21,9 @@ class Url extends ActiveRecord
         return '{{%url}}';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -30,6 +36,9 @@ class Url extends ActiveRecord
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
 	public function attributeLabels()
 	{
 		return [
@@ -41,6 +50,9 @@ class Url extends ActiveRecord
 		];
 	}
 
+    /**
+     * {@inheritdoc}
+     */
 	public function getLogs()
 	{
 		return $this->hasMany(LogModel::class, ['id' => 'url_id',]);

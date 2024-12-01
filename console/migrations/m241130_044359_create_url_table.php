@@ -1,6 +1,7 @@
 <?php
 
 use yii\db\Migration;
+use common\models\{LogModel, Url};
 
 /**
  * Handles the creation of table `{{%url}}`.
@@ -12,7 +13,7 @@ class m241130_044359_create_url_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%url}}', [
+        $this->createTable(Url::tableName(), [
 			'id' => $this->primaryKey() // ID
             , 'href' => $this->string()->notNull()->unique() // url для проверки
 			, 'frequency' => $this->integer()->unsigned()->notNull()->defaultValue(5) // частота проверки, минуты
@@ -20,13 +21,14 @@ class m241130_044359_create_url_table extends Migration
 			, 'delay' => $this->integer()->unsigned()->notNull()->defaultValue(5), // задержка в минутах между переповторами
         ]);
 
-		$this->addCommentOnTable('{{%url}}', 'ссылки на проверку');
+		$this->createIndex('idx-href-repetitions', Url::tableName(), ['href', 'repetitions',]);
 
-		$this->addCommentOnColumn('{{%url}}', 'id', 'ID');
-		$this->addCommentOnColumn('{{%url}}', 'href', 'url для проверки');
-		$this->addCommentOnColumn('{{%url}}', 'frequency', 'частота проверки, минуты');
-		$this->addCommentOnColumn('{{%url}}', 'repetitions', 'количество повторов в случае ошибки, -1=бесконечность');
-		$this->addCommentOnColumn('{{%url}}', 'delay', 'задержка в минутах между переповторами');
+		$this->addCommentOnTable(Url::tableName(), 'ссылки на проверку');
+		$this->addCommentOnColumn(Url::tableName(), 'id', 'ID');
+		$this->addCommentOnColumn(Url::tableName(), 'href', 'url для проверки');
+		$this->addCommentOnColumn(Url::tableName(), 'frequency', 'частота проверки, минуты');
+		$this->addCommentOnColumn(Url::tableName(), 'repetitions', 'количество повторов в случае ошибки, -1=бесконечность');
+		$this->addCommentOnColumn(Url::tableName(), 'delay', 'задержка в минутах между переповторами');
     }
 
     /**
@@ -34,6 +36,6 @@ class m241130_044359_create_url_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%url}}');
+        $this->dropTable(Url::tableName());
     }
 }
